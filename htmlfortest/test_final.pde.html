@@ -1,0 +1,374 @@
+<html>
+<head>
+<title>test_final.pde</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+test_final.pde</font>
+</center></td></tr></table>
+<pre><span class="s0">/*****************************************************************************</span>
+ <span class="s0">*</span>
+ <span class="s0">*  generateQRCode - QRCode generator - v07/26/2018</span>
+ <span class="s0">*</span>
+ <span class="s0">*  A simple example of the use of the ZXING4P.generateQRCode() method.</span>
+ <span class="s0">*</span>
+ <span class="s0">*  Enter a message that will be encoded in a QRCode and hit &lt;enter&gt;.</span>
+ <span class="s0">*</span>
+ <span class="s0">*  Press 's' to save the generated image (as a .gif file)</span>
+ <span class="s0">*  Press 'r' to start again</span>
+ <span class="s0">*</span>
+ <span class="s0">*  Library page:</span>
+ <span class="s0">*  http://cagewebdev.com/zxing4processing-processing-library/</span>
+ <span class="s0">*</span>
+ <span class="s0">*  (c) 2013-2018 Rolf van Gelder, http://cagewebdev.com, http://rvg.cage.nl</span>
+ <span class="s0">*</span>
+ <span class="s0">*****************************************************************************/</span>
+<span class="s0">/*****************************************************************************</span>
+ <span class="s0">*  Bubbles -  From ıɹnԀ uɐɐʌıΛ. </span>
+ <span class="s0">*  Bubbles - OpenProcessing. </span>
+ <span class="s0">*  Retrieved 6 June 2021</span>
+ <span class="s0">*  </span>
+ <span class="s0">*  from:</span>
+ <span class="s0">*  https://openprocessing.org/sketch/1097251</span>
+ <span class="s0">*  ıɹnԀ uɐɐʌıΛ</span>
+ <span class="s0">*****************************************************************************/</span>
+ <span class="s0">/*****************************************************************************</span>
+ <span class="s0">*  comfortable string music. Sc.chinaz.com. </span>
+ <span class="s0">*  Retrieved 7 June 2021</span>
+ <span class="s0">*</span>
+ <span class="s0">*  converted to 00.mp3 that was used for background music</span>
+ <span class="s0">*  from:</span>
+ <span class="s0">*  https://sc.chinaz.com/yinxiao/210504216040.htm.</span>
+ <span class="s0">*  Sc.Chinaz.com</span>
+ <span class="s0">******************************************************************************/</span>
+ <span class="s0">/*****************************************************************************</span>
+ <span class="s0">*  The University of Sydney</span>
+ <span class="s0">*  IDEA9101_S12021_WEEK5. </span>
+ <span class="s0">*  Canvas.sydney.edu.au. (2021). </span>
+ <span class="s0">*  Retrieved 7 June 2021</span>
+ <span class="s0">* </span>
+ <span class="s0">*  used for the interactive piano notes</span>
+ <span class="s0">*  Example:</span>
+ <span class="s0">*  IDEA9101_S12021_W5_Ex2_MouseSound</span>
+ <span class="s0">*  </span>
+ <span class="s0">*  from: </span>
+ <span class="s0">*  https://canvas.sydney.edu.au/courses/30315/files/15736452?module_item_id=1152703. </span>
+ <span class="s0">*</span>
+ <span class="s0">******************************************************************************/</span>
+<span class="s0">// IMPORT THE ZXING4PROCESSING LIBRARY AND DECLARE A ZXING4P OBJECT</span>
+<span class="s0">import com.cage.zxing4p3.*;</span>
+<span class="s0">ZXING4P zxing4p;</span>
+<span class="s0">// import OSC libraries</span>
+<span class="s0">import oscP5.*;</span>
+<span class="s0">import netP5.*;</span>
+<span class="s0">// importd Runway library</span>
+<span class="s0">import com.runwayml.*;</span>
+<span class="s0">// reference to runway instance</span>
+<span class="s0">RunwayOSC runway;</span>
+
+<span class="s0">// This array will hold all the humans detected</span>
+<span class="s0">JSONObject data;</span>
+
+<span class="s0">int leftWristInt = ModelUtils.POSE_LEFT_WRIST_INDEX;//declare the keypoint field</span>
+<span class="s0">int rightWristInt = ModelUtils.POSE_RIGHT_WRIST_INDEX;//declare the keypoint field</span>
+
+<span class="s0">PImage  QRCode;//improt image QR code</span>
+<span class="s0">PFont   font;// import font</span>
+
+<span class="s0">boolean generated = false;//origin set </span>
+<span class="s0">boolean firstTime = true;//origin set</span>
+
+<span class="s0">String  textToEncode = &quot;&quot;;//import string for the text</span>
+<span class="s0">boolean showCursor   = true;//origin set</span>
+<span class="s0">int     lastTime     = 0;</span>
+<span class="s0">ArrayList &lt; Box &gt; Boxs = new ArrayList &lt; Box &gt; ();//array for boxes </span>
+<span class="s0">float angle; // declare the angle of box rotation </span>
+<span class="s0">import processing.sound.*;//import sound</span>
+<span class="s0">int numsounds = 5;//declare number of sound</span>
+<span class="s0">SoundFile[] file; //declare soundfile</span>
+<span class="s0">SoundFile soundfile;</span>
+<span class="s0">float leftWristY;</span>
+<span class="s0">float leftWristX;</span>
+<span class="s0">void setup() {</span>
+  <span class="s0">fullScreen(P3D);//set the canvas for fullscreen and 3d</span>
+  <span class="s0">soundfile = new SoundFile(this, &quot;00.mp3&quot;);</span>
+  <span class="s0">soundfile.loop();</span>
+   <span class="s0">runway = new RunwayOSC(this);// setup Runway</span>
+ <span class="s0">file = new SoundFile[numsounds];//setup soundfile</span>
+ <span class="s0">for (int i = 0; i &lt; numsounds; i++) {</span>
+    <span class="s0">file[i] = new SoundFile(this, (i+1) + &quot;.mp3&quot;);</span>
+    
+  <span class="s0">}</span>
+  <span class="s0">// ZXING4P ENCODE/DECODER INSTANCE</span>
+  <span class="s0">zxing4p = new ZXING4P();</span>
+
+  <span class="s0">// SHOW VERSION INFORMATION IN CONSOLE</span>
+  <span class="s0">zxing4p.version();</span>
+
+  <span class="s0">font = loadFont(&quot;ArialMT-18.vlw&quot;);//setup font</span>
+  <span class="s0">textFont(font, 18);</span>
+<span class="s0">} </span>
+
+
+<span class="s0">void draw() {</span>
+  <span class="s0">background(176, 218, 185);//background color</span>
+   
+  <span class="s0">drawPoseNetParts(data);// manually draw PoseNet parts</span>
+    <span class="s0">if ((leftWristY &gt; 0) &amp;&amp; (leftWristY &lt; height/5)) {</span>
+    
+    <span class="s0">if (file[0].isPlaying()) {</span>
+    <span class="s0">} else {</span>
+      <span class="s0">file[0].play(0.5, 1.0);</span>
+    <span class="s0">}</span>
+  <span class="s0">} else {</span>
+    <span class="s0">file[0].stop();</span>
+     <span class="s0">}</span>
+
+
+  <span class="s0">if ((leftWristY &gt; height/5) &amp;&amp; (leftWristY &lt; height*0.4)) {</span>
+
+    <span class="s0">if (file[1].isPlaying()) {</span>
+    <span class="s0">} else {</span>
+      <span class="s0">file[1].play(0.5, 1.0);</span>
+    <span class="s0">}</span>
+  <span class="s0">} else {</span>
+    <span class="s0">file[1].stop();</span>
+
+  <span class="s0">}</span>
+
+
+  <span class="s0">if ((leftWristY&gt; height*0.4) &amp;&amp; (leftWristY &lt; height*0.6)) {</span>
+    <span class="s0">//fill(0, 255, 0, 255); //green</span>
+    <span class="s0">if (file[2].isPlaying()) {</span>
+    <span class="s0">} else {</span>
+      <span class="s0">file[2].play(0.5, 1.0);</span>
+    <span class="s0">}</span>
+  <span class="s0">} else {</span>
+    <span class="s0">file[2].stop();</span>
+
+  <span class="s0">}</span>
+
+
+  <span class="s0">if ((leftWristY&gt; height*0.6) &amp;&amp; (leftWristY &lt; height*0.8)) {</span>
+
+    <span class="s0">if (file[3].isPlaying()) {</span>
+    <span class="s0">} else {</span>
+      <span class="s0">file[3].play(0.5, 1.0);</span>
+    <span class="s0">}</span>
+  <span class="s0">} else {</span>
+    <span class="s0">file[3].stop();</span>
+
+  <span class="s0">}</span>
+
+
+  <span class="s0">if ((leftWristY &gt; height*0.8) &amp;&amp; (leftWristY &lt; height)) {</span>
+ 
+    <span class="s0">if (file[4].isPlaying()) {</span>
+    <span class="s0">} else {</span>
+      <span class="s0">file[4].play(0.5, 1.0);</span>
+    <span class="s0">}</span>
+  <span class="s0">} else {</span>
+    <span class="s0">file[4].stop();</span>
+
+  <span class="s0">}</span>
+  <span class="s0">//enable the use of leftwristY value to define which soundfile to be triggered to play</span>
+  <span class="s0">//it is devided into 5 zones from top to the bottom, each of them is linked with 1 different sound file</span>
+
+  <span class="s0">if (generated) { </span>
+ 
+    <span class="s0">Boxs.add(new Box());//add boxes if generated</span>
+
+  <span class="s0">for (int i = 0; i &lt; Boxs.size(); i++) {</span>
+    <span class="s0">Box Box = Boxs.get(i);</span>
+    <span class="s0">Box.render();//introduce function of 'render'</span>
+    <span class="s0">Box.move();//introduce function of 'move'</span>
+    
+    <span class="s0">//check if the box is touching the lefewrist</span>
+    <span class="s0">//if the box is touched by the leftwrist</span>
+    <span class="s0">//the box will be removed which means it will disappear from the screen</span>
+   
+     <span class="s0">if (Box.touchingMouse()){</span>
+      <span class="s0">Boxs.remove(i);</span>
+    <span class="s0">i--;</span>
+    <span class="s0">}}</span>
+    <span class="s0">// DISPLAY QR code</span>
+    <span class="s0">set(0, 0, QRCode);</span>
+  <span class="s0">} else {</span>
+    <span class="s0">// a screen for users to input their own content</span>
+    <span class="s0">// set the question on the screen:&quot;Tell us the things that you want to forget in your life:&quot;</span>
+    <span class="s0">fill(255);</span>
+    <span class="s0">text(&quot;Tell us the things that you want to forget in your life, click enter to start and use your left hand to erase them:&quot;, 10, 15, width - 40, height);</span>
+    <span class="s0">rect(0, 65, width, height);</span>
+ 
+    <span class="s0">// MAKE CURSOR BLINK</span>
+    <span class="s0">int t = millis();</span>
+    <span class="s0">if (t - lastTime &gt; 500) {</span>
+      <span class="s0">showCursor = !showCursor;</span>
+      <span class="s0">lastTime = t;</span>
+    <span class="s0">}</span>
+
+    <span class="s0">//DISPLAY USER INPUT</span>
+    <span class="s0">fill(0);</span>
+    <span class="s0">if (showCursor)</span>
+     <span class="s0">text(textToEncode + &quot;_&quot;, 10, 80, width - 40, height);</span>
+   <span class="s0">else</span>
+      <span class="s0">text(textToEncode, 10, 80, width - 40, height);</span>
+      
+  <span class="s0">} </span>
+<span class="s0">} </span>
+
+
+
+<span class="s0">void drawPoseNetParts(JSONObject data){</span>
+  <span class="s0">// Only if there are any humans detected</span>
+  <span class="s0">if (data != null) {</span>
+    <span class="s0">JSONArray humans = data.getJSONArray(&quot;poses&quot;); </span>
+    <span class="s0">// identify how many people in the picture from the poses part of the JSON object, and create an array of JSON objects (JSONArray)</span>
+    <span class="s0">for(int h = 0; h &lt; humans.size(); h++) { </span>
+      <span class="s0">// for each human to do the following</span>
+      <span class="s0">JSONArray bodyparts = humans.getJSONArray(h); //</span>
+      <span class="s0">// Now that we have one human, let's draw its left wrist trackers </span>
+ 
+        <span class="s0">JSONArray leftWrist = bodyparts.getJSONArray(leftWristInt); </span>
+        <span class="s0">// this grabs the xy co-ordinates from the JSON Array of the &quot;left wrist&quot; body part</span>
+       
+        <span class="s0">// declare floats from JSON array and scale normalized value to sketch size</span>
+        <span class="s0">leftWristX = leftWrist.getFloat(0) * width;</span>
+        <span class="s0">leftWristY = leftWrist.getFloat(1) * height;</span>
+     
+      <span class="s0">} </span>
+    <span class="s0">} </span>
+  <span class="s0">}</span>
+
+<span class="s0">class Box { </span>
+  <span class="s0">//indicate the declaration of boxes</span>
+  <span class="s0">PVector position = new PVector(0, 0);</span>
+ <span class="s0">// float size = 0;</span>
+  <span class="s0">PVector speed = new PVector(0, 0);</span>
+  <span class="s0">float colour;</span>
+
+  <span class="s0">Box() { </span>
+    <span class="s0">//define the initial location of the boxes</span>
+    <span class="s0">//define the speed of the boxes' movement according the change of its Y values</span>
+    <span class="s0">colorMode(RGB);</span>
+        <span class="s0">position.x = random(width);</span>
+        <span class="s0">position.y = 0;</span>
+        <span class="s0">speed.y = map(position.y, 0, height, 4, 60);</span>
+      
+  <span class="s0">}</span>
+
+  <span class="s0">void render() {</span>
+    
+    
+    <span class="s0">push();</span>
+  
+   <span class="s0">translate(position.x,position.y,random(0,10));</span>
+    <span class="s0">stroke(map(position.y, 0, height, 239, 21), map(position.y, 0, height, 100,64), map(position.y, 0, height, 37,166),map(position.y, 0, height, 200,0));</span>
+    <span class="s0">//define the colours of the strokes of the boxes according to the Y value</span>
+    <span class="s0">strokeWeight(map(position.y, 0, height, 0.5, 0));</span>
+    <span class="s0">//define the strokeWeight of the boxes according to the Y value</span>
+    <span class="s0">rotateX(map(position.x, 0, height, 0, PI));</span>
+    <span class="s0">rotateY(map(position.y, 0, height, 0, PI*4));</span>
+    <span class="s0">rotateZ(-map(position.y, 0, height, 0, PI*2));</span>
+    <span class="s0">//define the rotation angle of the boxes according to the X and Y value</span>
+    <span class="s0">fill(map(position.y, 0, height, 50, 255),map(position.y, 0, height, 200, 100));</span>
+    <span class="s0">//define the colours of the boxes according to the Y value</span>
+    <span class="s0">box(map(position.y, 0, height, 70, 1));</span>
+    <span class="s0">//define the size of the boxes according to the Y value</span>
+    <span class="s0">lights();</span>
+    <span class="s0">ambientLight(random(255),random(255), random(255));</span>
+    <span class="s0">//introduce ambientLight to make the boxes more colourful</span>
+    <span class="s0">pop();</span>
+     
+  <span class="s0">}</span>
+
+  <span class="s0">void move() {</span>
+    <span class="s0">position.y += speed.y;</span>
+  <span class="s0">}</span>
+  <span class="s0">//boolean is a return type, that defines what information to be sent out</span>
+  <span class="s0">boolean touchingMouse() {</span>
+    <span class="s0">//detect if the position of the leftwrsit is within the defined range of the box</span>
+    <span class="s0">if (dist(position.x, position.y, leftWristX, leftWristY) &lt; width/10 ) {</span>
+      <span class="s0">return true;</span>
+      <span class="s0">//if it is within the defined range</span>
+    <span class="s0">}</span>
+    <span class="s0">return false;</span>
+    <span class="s0">//if it is not within the defined range</span>
+  <span class="s0">}</span>
+
+<span class="s0">}</span>
+
+<span class="s0">String timeStamp() {</span>
+ <span class="s0">return year()+nf(month(), 2)+nf(day(), 2)+nf(hour(), 2)+nf(minute(), 2)+nf(second(), 2);</span>
+<span class="s0">} // timeStamp()</span>
+
+
+
+<span class="s0">void keyPressed() {</span>
+  <span class="s0">if (generated) { </span>
+    <span class="s0">// the image to save is created</span>
+    <span class="s0">if (key=='s' || key=='S') { </span>
+      <span class="s0">// save the generated image with a filename that show the time of the it happened</span>
+      <span class="s0">String ts = timeStamp();</span>
+      <span class="s0">saveFrame(dataPath(&quot;&quot;)+&quot;/timeStamp_&quot;+ts+&quot;.gif&quot;);</span>
+      <span class="s0">println(&quot;QRCode image saved as data/qrcode_&quot;+ts+&quot;.gif&quot;);</span>
+    <span class="s0">} else if (key=='r' || key=='R') { </span>
+      <span class="s0">// restart the program to be available for the next user</span>
+      <span class="s0">generated = false;</span>
+      <span class="s0">textToEncode = &quot;&quot;;</span>
+    <span class="s0">}</span>
+  <span class="s0">} else { </span>
+    <span class="s0">// WAITING FOR USER INPUT</span>
+    <span class="s0">if ((key == ENTER) || (key == RETURN)) {</span>
+      <span class="s0">// ENCODE THE TEXT INTO A QRCODE IMAGE</span>
+      <span class="s0">// PImage p = ZXING4P.generateQRCode(String txt,int width,int height)</span>
+      <span class="s0">// width and height is the size of the generated image</span>
+      <span class="s0">try {</span>
+        <span class="s0">QRCode = zxing4p.generateQRCode(textToEncode, 100, 100</span>
+        <span class="s0">);</span>
+        <span class="s0">QRCode.save(dataPath(&quot;&quot;)+&quot;/qrcode_tmp.gif&quot;);</span>
+        <span class="s0">QRCode = loadImage(&quot;qrcode_tmp.gif&quot;);</span>
+      <span class="s0">} </span>
+      <span class="s0">catch (Exception e) {  </span>
+        <span class="s0">println(&quot;Exception: &quot;+e);</span>
+        <span class="s0">QRCode = null;</span>
+      <span class="s0">}</span>
+
+      <span class="s0">if (firstTime) {</span>
+        <span class="s0">println(&quot;Press 's' to save the image to disk&quot;);</span>
+        <span class="s0">println(&quot;Press 'r' to start again&quot;);</span>
+      <span class="s0">}</span>
+      <span class="s0">generated = true;      </span>
+      <span class="s0">firstTime = false;</span>
+    <span class="s0">} else if ((key &gt; 31) &amp;&amp; (key != CODED)) {</span>
+      <span class="s0">// REGULAR CHARACTER: ADD TO STRING</span>
+      <span class="s0">textToEncode = textToEncode + key;</span>
+    <span class="s0">} else if ((key == BACKSPACE) &amp;&amp; (0 &lt; textToEncode.length())) {</span>
+      <span class="s0">textToEncode = textToEncode.substring(0, textToEncode.length() - 1);</span>
+    <span class="s0">}</span>
+  <span class="s0">}</span>
+<span class="s0">} // keyPressed() </span>
+<span class="s0">void runwayDataEvent(JSONObject runwayData){</span>
+  <span class="s0">// point the sketch data to the Runway incoming data </span>
+  <span class="s0">data = runwayData;</span>
+  
+<span class="s0">}</span>
+
+<span class="s0">// this is called each time Processing connects to Runway</span>
+<span class="s0">// Runway sends information about the current model</span>
+<span class="s0">public void runwayInfoEvent(JSONObject info){</span>
+  <span class="s0">println(info);</span>
+<span class="s0">}</span>
+<span class="s0">// if anything goes wrong</span>
+<span class="s0">public void runwayErrorEvent(String message){</span>
+  <span class="s0">println(message);</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>
