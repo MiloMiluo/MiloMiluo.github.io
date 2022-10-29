@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <headerType>gui</headerType>
+  <dontWrapJar>true</dontWrapJar>
+  <downloadUrl>https://adoptium.net/</downloadUrl>
+  <outfile>F:\UNSW\新南\term6\9311\A2\test_final\test_final\windows-amd64\test_final.exe</outfile>
+  <icon>F:\UNSW\新南\term6\9311\A2\processing-4.0.1-windows-x64\processing-4.0.1\modes\java\application\application.ico</icon>
+  <classPath>
+    <mainClass>test_final</mainClass>
+    <cp>lib/test_final.jar</cp>
+    <cp>lib/core.jar</cp>
+    <cp>lib/gluegen-rt.jar</cp>
+    <cp>lib/jogl-all.jar</cp>
+    <cp>lib/zxing4p3.jar</cp>
+    <cp>lib/zxingcore_3.3.2.jar</cp>
+    <cp>lib/zxingjavase_3.3.2.jar</cp>
+    <cp>lib/oscP5.jar</cp>
+    <cp>lib/okhttp.jar</cp>
+    <cp>lib/okio.jar</cp>
+    <cp>lib/RunwayML.jar</cp>
+    <cp>lib/javamp3-1.0.4.jar</cp>
+    <cp>lib/jsyn-20171016.jar</cp>
+    <cp>lib/sound.jar</cp>
+  </classPath>
+  <jre>
+    <path>java</path>
+    <minVersion>17</minVersion>
+    <opt>-Djna.nosys=true</opt>
+    <opt>-Djava.library.path="%EXEDIR%\lib"</opt>
+  </jre>
+</launch4jConfig>
