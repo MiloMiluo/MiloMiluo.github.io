@@ -1,8 +1,5 @@
-
-
 boolean generated = false;//origin set 
 boolean firstTime = true;//origin set
-
 String  textToEncode = "";//import string for the text
 boolean showCursor   = true;//origin set
 int     lastTime     = 0;
