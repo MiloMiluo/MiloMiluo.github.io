@@ -74,7 +74,6 @@ JSONObject data;
 int leftWristInt = ModelUtils.POSE_LEFT_WRIST_INDEX;//declare the keypoint field
 int rightWristInt = ModelUtils.POSE_RIGHT_WRIST_INDEX;//declare the keypoint field
 PImage  QRCode;//improt image QR code
-PFont   font;// import font
 
 boolean generated = false;//origin set 
 boolean firstTime = true;//origin set
@@ -89,14 +88,7 @@ float leftWristX;
 void setup() {
   fullScreen(P3D);//set the canvas for fullscreen and 3d
    runway = new RunwayOSC(this);// setup Runway
-  // ZXING4P ENCODE/DECODER INSTANCE
-  zxing4p = new ZXING4P();
 
-  // SHOW VERSION INFORMATION IN CONSOLE
-  zxing4p.version();
-
-  font = loadFont("data/ArialMT-18.vlw");//setup font
-  textFont(font, 18);
 } 
 
 
@@ -270,15 +262,7 @@ void keyPressed() {
       // ENCODE THE TEXT INTO A QRCODE IMAGE
       // PImage p = ZXING4P.generateQRCode(String txt,int width,int height)
       // width and height is the size of the generated image
-  try {
-        QRCode = zxing4p.generateQRCode(textToEncode, 100, 100
-        );
-        QRCode.save(dataPath(""));
-      } 
-      catch (Exception e) {  
-        println("Exception: "+e);
-        QRCode = null;
-      }
+
 
       if (firstTime) {
         println("Press 's' to save the image to disk");
