@@ -2,64 +2,12 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Processing.js</title>
+    <title> </title>
     <script src="processing.js"></script>
   </head>
   <body>
-    <h1>Processing.js</h1>
+    <h1> </h1>
     <script type="text/processing">
-/*****************************************************************************
- *
- *  generateQRCode - QRCode generator - v07/26/2018
- *
- *  A simple example of the use of the ZXING4P.generateQRCode() method.
- *
- *  Enter a message that will be encoded in a QRCode and hit <enter>.
- *
- *  Press 's' to save the generated image (as a .gif file)
- *  Press 'r' to start again
- *
- *  Library page:
- *  http://cagewebdev.com/zxing4processing-processing-library/
- *
- *  (c) 2013-2018 Rolf van Gelder, http://cagewebdev.com, http://rvg.cage.nl
- *
- *****************************************************************************/
-/*****************************************************************************
- *  Bubbles -  From ıɹnԀ uɐɐʌıΛ. 
- *  Bubbles - OpenProcessing. 
- *  Retrieved 6 June 2021
- *  
- *  from:
- *  https://openprocessing.org/sketch/1097251
- *  ıɹnԀ uɐɐʌıΛ
- *****************************************************************************/
- /*****************************************************************************
- *  comfortable string music. Sc.chinaz.com. 
- *  Retrieved 7 June 2021
- *
- *  converted to 00.mp3 that was used for background music
- *  from:
- *  https://sc.chinaz.com/yinxiao/210504216040.htm.
- *  Sc.Chinaz.com
- ******************************************************************************/
- /*****************************************************************************
- *  The University of Sydney
- *  IDEA9101_S12021_WEEK5. 
- *  Canvas.sydney.edu.au. (2021). 
- *  Retrieved 7 June 2021
- * 
- *  used for the interactive piano notes
- *  Example:
- *  IDEA9101_S12021_W5_Ex2_MouseSound
- *  
- *  from: 
- *  https://canvas.sydney.edu.au/courses/30315/files/15736452?module_item_id=1152703. 
- *
- ******************************************************************************/
-// IMPORT THE ZXING4PROCESSING LIBRARY AND DECLARE A ZXING4P OBJECT
-import com.cage.zxing4p3.*;
-ZXING4P zxing4p;
 // import OSC libraries
 import oscP5.*;
 import netP5.*;
@@ -73,7 +21,6 @@ JSONObject data;
 
 int leftWristInt = ModelUtils.POSE_LEFT_WRIST_INDEX;//declare the keypoint field
 int rightWristInt = ModelUtils.POSE_RIGHT_WRIST_INDEX;//declare the keypoint field
-PImage  QRCode;//improt image QR code
 
 boolean generated = false;//origin set 
 boolean firstTime = true;//origin set
