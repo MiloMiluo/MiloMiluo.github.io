@@ -6,11 +6,7 @@ import com.runwayml.*;
 // reference to runway instance
 RunwayOSC runway;
 
-// This array will hold all the humans detected
-JSONObject data;
 
-int leftWristInt = ModelUtils.POSE_LEFT_WRIST_INDEX;//declare the keypoint field
-int rightWristInt = ModelUtils.POSE_RIGHT_WRIST_INDEX;//declare the keypoint field
 
 boolean generated = false;//origin set 
 boolean firstTime = true;//origin set
@@ -31,34 +27,6 @@ void setup() {
 
 void draw() {
   background(176, 218, 185);//background color
-   
-  drawPoseNetParts(data);// manually draw PoseNet parts
-    if ((leftWristY > 0) && (leftWristY < height/5)) {
-
-     }
-
-
-  if ((leftWristY > height/5) && (leftWristY < height*0.4)) {
-    
-  }
-
-
-  if ((leftWristY> height*0.4) && (leftWristY < height*0.6)) {
-    //fill(0, 255, 0, 255); //green
-
-  }
-
-
-  if ((leftWristY> height*0.6) && (leftWristY < height*0.8)) {
-
-  }
-
-
-  if ((leftWristY > height*0.8) && (leftWristY < height)) {
-
-  }
-  //enable the use of leftwristY value to define which soundfile to be triggered to play
-  //it is devided into 5 zones from top to the bottom, each of them is linked with 1 different sound file
 
   if (generated) { 
  
@@ -100,26 +68,6 @@ void draw() {
       
   } 
 } 
-void drawPoseNetParts(JSONObject data){
-  // Only if there are any humans detected
-  if (data != null) {
-    JSONArray humans = data.getJSONArray("poses"); 
-    // identify how many people in the picture from the poses part of the JSON object, and create an array of JSON objects (JSONArray)
-    for(int h = 0; h < humans.size(); h++) { 
-      // for each human to do the following
-      JSONArray bodyparts = humans.getJSONArray(h); //
-      // Now that we have one human, let's draw its left wrist trackers 
- 
-        JSONArray leftWrist = bodyparts.getJSONArray(leftWristInt); 
-        // this grabs the xy co-ordinates from the JSON Array of the "left wrist" body part
-       
-        // declare floats from JSON array and scale normalized value to sketch size
-        leftWristX = leftWrist.getFloat(0) * width;
-        leftWristY = leftWrist.getFloat(1) * height;
-     
-      } 
-    } 
-  }
 
 class Box { 
   //indicate the declaration of boxes
@@ -215,17 +163,11 @@ void keyPressed() {
     }
   }
 } // keyPressed() 
-void runwayDataEvent(JSONObject runwayData){
-  // point the sketch data to the Runway incoming data 
-  data = runwayData;
   
-}
 
 // this is called each time Processing connects to Runway
 // Runway sends information about the current model
-public void runwayInfoEvent(JSONObject info){
-  println(info);
-}
+
 // if anything goes wrong
 public void runwayErrorEvent(String message){
   println(message);
