@@ -8,7 +8,7 @@
   <body>
     <h1>Processing.js</h1>
     <script type="text/processing">
-    /*****************************************************************************
+ /*****************************************************************************
  *
  *  generateQRCode - QRCode generator - v07/26/2018
  *
@@ -85,25 +85,18 @@ boolean showCursor   = true;//origin set
 int     lastTime     = 0;
 ArrayList < Box > Boxs = new ArrayList < Box > ();//array for boxes 
 float angle; // declare the angle of box rotation 
-import processing.sound.*;//import sound
-int numsounds = 5;//declare number of sound
-SoundFile[] file; //declare soundfile
-SoundFile soundfile;
 float leftWristY;
 float leftWristX;
 void setup() {
   fullScreen(P3D);//set the canvas for fullscreen and 3d
    runway = new RunwayOSC(this);// setup Runway
- for (int i = 0; i < numsounds; i++) {
-    
-  }
   // ZXING4P ENCODE/DECODER INSTANCE
   zxing4p = new ZXING4P();
 
   // SHOW VERSION INFORMATION IN CONSOLE
   zxing4p.version();
 
-  font = loadFont("ArialMT-18.vlw");//setup font
+  font = loadFont("data/ArialMT-18.vlw");//setup font
   textFont(font, 18);
 } 
 
