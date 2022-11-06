@@ -63,7 +63,6 @@ JSONObject data;
 
 int leftWristInt = ModelUtils.POSE_LEFT_WRIST_INDEX;//declare the keypoint field
 int rightWristInt = ModelUtils.POSE_RIGHT_WRIST_INDEX;//declare the keypoint field
-
 PImage  QRCode;//improt image QR code
 PFont   font;// import font
 
@@ -139,8 +138,6 @@ void draw() {
       Boxs.remove(i);
     i--;
     }}
-    // DISPLAY QR code
-    set(0, 0, QRCode);
   } else {
     // a screen for users to input their own content
     // set the question on the screen:"Tell us the things that you want to forget in your life:"
@@ -164,9 +161,6 @@ void draw() {
       
   } 
 } 
-
-
-
 void drawPoseNetParts(JSONObject data){
   // Only if there are any humans detected
   if (data != null) {
@@ -255,12 +249,7 @@ String timeStamp() {
 void keyPressed() {
   if (generated) { 
     // the image to save is created
-    if (key=='s' || key=='S') { 
-      // save the generated image with a filename that show the time of the it happened
-      String ts = timeStamp();
-      saveFrame(dataPath("")+"/timeStamp_"+ts+".gif");
-      println("QRCode image saved as data_"+ts+".gif");
-    } else if (key=='r' || key=='R') { 
+    if (key=='r' || key=='R') { 
       // restart the program to be available for the next user
       generated = false;
       textToEncode = "";
@@ -271,7 +260,15 @@ void keyPressed() {
       // ENCODE THE TEXT INTO A QRCODE IMAGE
       // PImage p = ZXING4P.generateQRCode(String txt,int width,int height)
       // width and height is the size of the generated image
- 
+  try {
+        QRCode = zxing4p.generateQRCode(textToEncode, 100, 100
+        );
+        QRCode.save(dataPath(""));
+      } 
+      catch (Exception e) {  
+        println("Exception: "+e);
+        QRCode = null;
+      }
 
       if (firstTime) {
         println("Press 's' to save the image to disk");
