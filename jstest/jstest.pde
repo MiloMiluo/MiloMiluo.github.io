@@ -1,10 +1,4 @@
-// import OSC libraries
-import oscP5.*;
-import netP5.*;
-// importd Runway library
-import com.runwayml.*;
-// reference to runway instance
-RunwayOSC runway;
+
 
 boolean generated = false;//origin set 
 boolean firstTime = true;//origin set
@@ -18,7 +12,7 @@ float leftWristY;
 float leftWristX;
 void setup() {
   fullScreen(P3D);//set the canvas for fullscreen and 3d
-   runway = new RunwayOSC(this);// setup Runway
+
 } 
 
 void draw() {
