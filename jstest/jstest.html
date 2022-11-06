@@ -269,7 +269,7 @@ void keyPressed() {
       // save the generated image with a filename that show the time of the it happened
       String ts = timeStamp();
       saveFrame(dataPath("")+"/timeStamp_"+ts+".gif");
-      println("QRCode image saved as data/qrcode_"+ts+".gif");
+      println("QRCode image saved as data_"+ts+".gif");
     } else if (key=='r' || key=='R') { 
       // restart the program to be available for the next user
       generated = false;
@@ -281,16 +281,7 @@ void keyPressed() {
       // ENCODE THE TEXT INTO A QRCODE IMAGE
       // PImage p = ZXING4P.generateQRCode(String txt,int width,int height)
       // width and height is the size of the generated image
-      try {
-        QRCode = zxing4p.generateQRCode(textToEncode, 100, 100
-        );
-        QRCode.save(dataPath("")+"/qrcode_tmp.gif");
-        QRCode = loadImage("data/qrcode_tmp.gif");
-      } 
-      catch (Exception e) {  
-        println("Exception: "+e);
-        QRCode = null;
-      }
+ 
 
       if (firstTime) {
         println("Press 's' to save the image to disk");
