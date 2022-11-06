@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project>
-  <target name="windows">
-    <taskdef classname="net.sf.launch4j.ant.Launch4jTask" classpath="F:\UNSW\新南\term6\9311\A2\processing-4.0.1-windows-x64\processing-4.0.1\modes\java\application\launch4j/launch4j.jar:F:\UNSW\新南\term6\9311\A2\processing-4.0.1-windows-x64\processing-4.0.1\modes\java\application\launch4j/lib/xstream.jar" name="launch4j"/>
-    <launch4j configFile="F:\UNSW\新南\term6\9311\A2\test_final\test_final\windows-amd64\launch4j-config.xml"/>
-  </target>
-</project>
