@@ -6,8 +6,6 @@ import com.runwayml.*;
 // reference to runway instance
 RunwayOSC runway;
 
-
-
 boolean generated = false;//origin set 
 boolean firstTime = true;//origin set
 
@@ -21,9 +19,7 @@ float leftWristX;
 void setup() {
   fullScreen(P3D);//set the canvas for fullscreen and 3d
    runway = new RunwayOSC(this);// setup Runway
-
 } 
-
 
 void draw() {
   background(176, 218, 185);//background color
@@ -64,8 +60,7 @@ void draw() {
     if (showCursor)
      text(textToEncode + "_", 10, 80, width - 40, height);
    else
-      text(textToEncode, 10, 80, width - 40, height);
-      
+      text(textToEncode, 10, 80, width - 40, height);   
   } 
 } 
 
@@ -83,14 +78,10 @@ class Box {
         position.x = random(width);
         position.y = 0;
         speed.y = map(position.y, 0, height, 4, 60);
-      
   }
 
   void render() {
-    
-    
     push();
-  
    translate(position.x,position.y,random(0,10));
     stroke(map(position.y, 0, height, 239, 21), map(position.y, 0, height, 100,64), map(position.y, 0, height, 37,166),map(position.y, 0, height, 200,0));
     //define the colours of the strokes of the boxes according to the Y value
@@ -107,8 +98,7 @@ class Box {
     lights();
     ambientLight(random(255),random(255), random(255));
     //introduce ambientLight to make the boxes more colourful
-    pop();
-     
+    pop();   
   }
 
   void move() {
@@ -124,14 +114,11 @@ class Box {
     return false;
     //if it is not within the defined range
   }
-
 }
 
 String timeStamp() {
  return year()+nf(month(), 2)+nf(day(), 2)+nf(hour(), 2)+nf(minute(), 2)+nf(second(), 2);
 } // timeStamp()
-
-
 
 void keyPressed() {
   if (generated) { 
@@ -163,10 +150,6 @@ void keyPressed() {
     }
   }
 } // keyPressed() 
-  
-
-// this is called each time Processing connects to Runway
-// Runway sends information about the current model
 
 // if anything goes wrong
 public void runwayErrorEvent(String message){
